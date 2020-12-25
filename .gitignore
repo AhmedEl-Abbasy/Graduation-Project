@@ -1,0 +1,4 @@
+.pylintrc
+.DS_Store
+*.log
+.code-workspace

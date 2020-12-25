@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true,
+		"python.pythonPath": "C:\\Users\\ayata\\AppData\\Local\\Programs\\Python\\Python38\\python.exe"
+	}
+}
