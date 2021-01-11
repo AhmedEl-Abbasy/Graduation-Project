@@ -15,30 +15,36 @@ try:
         'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
 except IndexError:
     pass
+    
 import carla
 
 IM_WIDTH = 681
 IM_HEIGHT = 696
+frame_width = int(681)
+frame_height = int(696)
+
+out = cv2.VideoWriter('output.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 10, (frame_width,frame_height))
+
+
 def process_img(image):
     i = np.array(image.raw_data)
     i2 = i.reshape(IM_HEIGHT,IM_WIDTH,4)
     i3 = i2[:,:,:3]
     cv2.imshow("",i3)
+    out.write(i3)
     cv2.waitKey(1)
     return i3/255.0
 
 actor_list = []
+
 try:
     client = carla.Client("127.0.0.1",2000)
     client.set_timeout(2.0)
-    
-    world = client.get_world()
-    
+    world = client.get_world()  
     blueprint_library = world.get_blueprint_library()
-    
     bp = blueprint_library.filter("model3")[0]
     #spawn_point = random.choice(world.get_map().get_spawn_points())
-    spawn_point = carla.Transform(carla.Location(x=35.2, y=7.2, z=5), carla.Rotation(pitch=0.000000, yaw=0, roll=0.000000))
+    spawn_point = carla.Transform(carla.Location(x=35.2, y=7.2, z=5), carla.Rotation(pitch=0.0, yaw=0, roll=0.0))
     vehicle = world.spawn_actor(bp,spawn_point)
     vehicle.set_autopilot(True)
     #vehicle.apply_control(carla.VehicleControl(throttle=1.0,steer=0.0))
@@ -47,13 +53,16 @@ try:
     cam_bp = blueprint_library.find("sensor.camera.rgb")
     cam_bp.set_attribute('image_size_x', f'{IM_WIDTH}')
     cam_bp.set_attribute('image_size_y', f'{IM_HEIGHT}')
-    cam_bp.set_attribute("fov","90")
+    cam_bp.set_attribute("fov","110")
     spawn_cam_point = carla.Transform(carla.Location(x=-5,z=3))
     camera = world.spawn_actor(cam_bp,spawn_cam_point,attach_to = vehicle)
     actor_list.append(camera)
     camera.listen(lambda data: process_img(data))
 
-    time.sleep(10)
+    time.sleep(15)
+    out.release()
+    cv2.destroyAllWindows() 
+
 finally:
     for actor in actor_list:
         actor.destroy()
