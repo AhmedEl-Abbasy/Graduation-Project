@@ -1,4 +1,5 @@
 .pylintrc
 .DS_Store
 *.log
-.code-workspace
+workspace.code-workspace
+.vscode
