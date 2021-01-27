@@ -1,0 +1,6 @@
+projectKey=Graduation
+serverUrl=http://197.161.175.22:9000
+serverVersion=8.6.0.39681
+dashboardUrl=http://197.161.175.22:9000/dashboard?id=Graduation
+ceTaskId=AXclcnZxUs60r2noy8pf
+ceTaskUrl=http://197.161.175.22:9000/api/ce/task?id=AXclcnZxUs60r2noy8pf
