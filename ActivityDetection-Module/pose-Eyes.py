@@ -1,3 +1,6 @@
+#pip install imutils
+#!pip install mediapipe opencv-python
+
 import mediapipe as mp
 import cv2 as cv 
 from scipy.spatial import distance
