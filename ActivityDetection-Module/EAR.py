@@ -3,7 +3,7 @@ import imutils
 from imutils import face_utils
 import dlib
 import cv2 as cv
-import numpy as np
+
 
 
 
@@ -18,7 +18,7 @@ thresh = 0.25
 frame_check = 20		# Time needed to show an alert
 
 detect = dlib.get_frontal_face_detector()
-predict = dlib.shape_predictor("ActivityDetection-Module/shape_predictor_68_face_landmarks.dat")# Dat file is the crux of the code
+predict = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")# Dat file is the crux of the code
 
 # Get the left and Right Eyes indices in order to pass calculations
 (lStart, lEnd) = face_utils.FACIAL_LANDMARKS_68_IDXS["left_eye"]
@@ -65,5 +65,5 @@ while True:
 	key = cv.waitKey(1) & 0xFF
 	if key == ord("q"):
 		break
+cap.release()
 cv.destroyAllWindows()
-cap.stop()
