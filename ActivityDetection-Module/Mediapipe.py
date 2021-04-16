@@ -1,7 +1,7 @@
 import cv2 as cv
 import mediapipe as mp
 import numpy as np
-import calculations
+import calculations , draw
 
 # Declaring FaceMesh model
 mp_face_mesh = mp.solutions.face_mesh
@@ -9,9 +9,6 @@ face_mesh = mp_face_mesh.FaceMesh(min_detection_confidence=0.3, min_tracking_con
 #Declaring Pose
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose(min_detection_confidence=0.5,min_tracking_confidence=0.5)
-
-mp_drawing = mp.solutions.drawing_utils 
-drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
 
 flag = 0
 thresh = 0.2
@@ -21,8 +18,9 @@ cap = cv.VideoCapture(0)
 while cap.isOpened():
     success, image = cap.read()
     image = cv.cvtColor(cv.flip(image, 1), cv.COLOR_BGR2RGB)
-
     image.flags.writeable = False
+
+    # Process the image
     face_results = face_mesh.process(image)
     pose_results = pose.process(image)
 
@@ -41,17 +39,15 @@ while cap.isOpened():
 
         # draw face mesh over image
         for face_landmarks in face_results.multi_face_landmarks:
-                mp_drawing.draw_landmarks(
-                    image=image,
-                    landmark_list=face_landmarks,
-                    connections=mp_face_mesh.FACE_CONNECTIONS,
-                    landmark_drawing_spec=drawing_spec,
-                    connection_drawing_spec=drawing_spec)
+            draw.draw_face(face_landmarks,image,mp_face_mesh)
 
-        ear = calculations.eye_feature(face_landmarks_positions)
+        EAR = calculations.eye_feature(face_landmarks_positions)
+        
+        # draw pose
+        draw.draw_pose(image,pose_results,mp_pose)
 
         ## Return boolean if EAR < thresh
-        if ear < thresh:
+        if EAR < thresh:
             flag+=1
             print(flag)
             if flag >= frame_check:
@@ -60,10 +56,7 @@ while cap.isOpened():
         else:
             flag = 0
 
-        mp_drawing.draw_landmarks(image, pose_results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                                mp_drawing.DrawingSpec(color=(245,117,66), thickness=2, circle_radius=2), 
-                                mp_drawing.DrawingSpec(color=(245,66,230), thickness=2, circle_radius=2) 
-                                 )               
+        draw.draw_pose(image,pose_results,mp_pose)         
         
     try:
         landmarks = pose_results.pose_landmarks.landmark
