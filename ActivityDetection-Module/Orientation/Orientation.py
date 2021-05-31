@@ -53,7 +53,7 @@ while cap.isOpened():
             
         
     else :
-        print("no face in frame")
+        #print("no face in frame")
         cv2.putText(image,'Wrong ,No Face in Frame',(10,300),32, 4,(0,0,255),5)
 
     
