@@ -80,7 +80,6 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
             rightEAR = eye_aspect_ratio(RightEye)
             
             ear = (leftEAR + rightEAR) / 2.0
-        
             if ear < thresh:
                 flag += 1
                 print (flag)
